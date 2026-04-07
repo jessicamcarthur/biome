@@ -1,0 +1,257 @@
+/* GLOBAL STYLES */
+body {
+    font-family: "neulis-sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    margin: 0;
+    padding: 0;
+    background-color: #1E1E1E;
+    color: #FDFDFA;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/* HEADER */
+header {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo img {
+    height: 20px;
+}
+
+header .account-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+header .account-icon img {
+    width: 100%;
+    height: 100%;
+}
+
+header .hero-text {
+    margin-top: 32px;
+    text-align: left;
+}
+
+header .hero-text h1 {
+    font-family: "neulis-sans", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 30px;
+    margin-bottom: -10px;
+    text-transform: uppercase;
+}
+
+header .hero-text h2 {
+    font-family: "neulis-sans", sans-serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 30px;
+    margin: 0;
+    color: #7AD8A4;
+    text-transform: uppercase;
+}
+
+header p {
+    font-family: "neulis-sans", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+/* CONTAINER */
+.container {
+    padding: 20px 30px;
+}
+
+/* YOUR COLLECTION */
+.collection-section {
+    position: relative;
+    margin-top: 60px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    border: #7AD8A4 0.5px solid;
+    border-radius: 10px;
+}
+
+.collection-header {
+    display: flex;
+    align-items: center;
+    gap: 0px;
+    margin-bottom: 8px;
+}
+
+.collection-section .save-icon {
+    width: 40px;
+    height: 40px;
+}
+
+.collection-section h3 {
+    font-weight: 500;
+    font-size: 20px;
+    margin: 0px;
+    display: inline-block;
+}
+
+.view-button {
+    font-weight: 400;
+    font-size: 12px;
+    color: #FDFDFA;
+    float: right;
+    margin-left: auto;
+    cursor: pointer;
+}
+
+.cards {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding-bottom: 10px;
+}
+
+.card {
+    min-width: 50px;
+    max-width: 100px;
+    background-color: #434343;
+    border-radius: 10px;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+.card h4 {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    margin: 8px 0 0 0;
+}
+
+.card p {
+    font-weight: 400;
+    font-size: 12px;
+    color: #FDFDFA;
+}
+
+/* CAROUSEL ARROWS & PROGRESS */
+.arrow {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.arrow.left {
+    left: 0;
+}
+
+.arrow.right {
+    right: 0;
+}
+
+.circle.progress {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.circle.progress img:first-child {
+    width: 12px;
+    height: 12px;
+}
+
+.circle.progress img:not(:first-child) {
+    width: 10px;
+    height: 10px;
+}
+
+/* EXPLORE BUTTON */
+.explore-button {
+    display: inline-block;
+    margin: 40px 0;
+    padding: 15px 35px;
+    background-color: #EDB534;
+    color: #1E1E1E;
+    font-size: 1.1rem;
+    font-weight: 400;
+    border-radius: 12px;
+    text-align: center;
+}
+
+.explore-button:hover {
+    background-color: #5a7320;
+}
+
+/* PARTNERS SECTION */
+.partners {
+    margin-top: 50px;
+}
+
+.partners h3 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+}
+
+.partner-logos {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.partner-logos img {
+    max-height: 60px;
+    object-fit: contain;
+}
+
+/* ==============================
+   RESPONSIVE
+============================== */
+@media (max-width: 768px) {
+    .cards {
+        gap: 15px;
+    }
+
+    .card {
+        min-width: 160px;
+    }
+
+    .hero-text h1 {
+        font-size: 1.8rem;
+    }
+
+    .hero-text h2 {
+        font-size: 2rem;
+    }
+
+    .explore-button {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
+}
