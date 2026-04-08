@@ -15,11 +15,8 @@
     <header>
         <div class="header-top">
             <div class="logo">
-                <img src="images/biome-logo.png" alt="Biome Logo">
-            </div>
-            <div class="account-icon">
-                <a href="account.html">
-                    <img src="images/account.svg" alt="Account Icon">
+                <a href="index.html">
+                    <img src="images/arrow-left.svg" alt="Back Arrow">
                 </a>
             </div>
         </div>
@@ -29,14 +26,20 @@
             <h2>Exploring</h2>
         </div>
 
-        <p>You have only just begun. There are more plants around you with stories, benefits, and remedies to discover.
-        </p>
+        <div class="scan-description">
+            <p>You have only just begun. There are more plants around you with stories, benefits, and remedies to
+                discover.
+            </p>
 
-        <p>Use your camera to scan a plant nearby and see what you can find. </p>
-        </p>
+            <p>Use your camera to scan a plant nearby and see what you can find. </p>
+            </p>
+        </div>
     </header>
 
     <div class="camera-container">
-    <video id="camera" autoplay playsinline></video>
-    <button id="capture-btn">Scan Plant</button>
-</div>
+        <video id="camera" autoplay playsinline muted></video>
+    </div>
+
+    <script src="script.js"></script>
+
+</html>

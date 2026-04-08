@@ -42,10 +42,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const video = document.getElementById("camera");
 
-navigator.mediaDevices.getUserMedia({ video: true })
+navigator.mediaDevices.getUserMedia({
+    video: {
+        facingMode: { exact: "environment" } // 👈 forces back camera
+    }
+})
+.then((stream) => {
+    video.srcObject = stream;
+    video.play();
+})
+.catch((error) => {
+    console.error("Camera error:", error);
+
+    // fallback if exact fails
+    navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+    })
     .then((stream) => {
         video.srcObject = stream;
-    })
-    .catch((error) => {
-        console.error("Camera access denied:", error);
+        video.play();
     });
+});
