@@ -23,7 +23,9 @@ img {
 header {
     display: flex;
     flex-direction: column;
-    padding: 20px;
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-top: 32px;
 }
 
 .header-top {
@@ -84,13 +86,14 @@ header p {
 
 /* CONTAINER */
 .container {
-    padding: 20px 30px;
+    padding-left: 24px;
+    padding-right: 24px;
 }
 
 /* YOUR COLLECTION */
 .collection-section {
     position: relative;
-    margin-top: 60px;
+    margin-top: 50px;
     padding-top: 16px;
     padding-bottom: 16px;
     padding-left: 16px;
@@ -107,13 +110,14 @@ header p {
 }
 
 .collection-section .save-icon {
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 20px;
 }
 
 .collection-section h3 {
     font-weight: 500;
     font-size: 20px;
+    padding-left: 6px;
     margin: 0px;
     display: inline-block;
 }
@@ -128,27 +132,37 @@ header p {
 }
 
 .cards {
+    position: relative;
     display: flex;
     gap: 20px;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding-bottom: 10px;
+    overflow: hidden;
+    padding-top: 0px;
+    padding-bottom: 8px;
 }
 
 .card {
-    min-width: 50px;
-    max-width: 100px;
+    display: flex;
+    gap: 12px;
+    width: 270px;
+    height: 150px;
     background-color: #434343;
     border-radius: 10px;
     padding: 12px;
     flex-shrink: 0;
 }
 
+.card img {
+    width: 120px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
 .card h4 {
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
-    margin: 8px 0 0 0;
+    margin: 0;
 }
 
 .card p {
@@ -158,81 +172,78 @@ header p {
 }
 
 /* CAROUSEL ARROWS & PROGRESS */
+.carousel-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 16px;
+}
+
 .arrow {
-    width: 50px;
-    height: 50px;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
     cursor: pointer;
-}
-
-.arrow.left {
-    left: 0;
-}
-
-.arrow.right {
-    right: 0;
 }
 
 .circle.progress {
     display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-top: 16px;
+    gap: 12px;
 }
 
-.circle.progress img:first-child {
-    width: 12px;
-    height: 12px;
+.circle.progress img {
+    width: 14px;
+    height: 14px;
 }
 
-.circle.progress img:not(:first-child) {
-    width: 10px;
-    height: 10px;
+.circle.progress img.active {
+    width: 16px;
+    height: 16px;
 }
 
 /* EXPLORE BUTTON */
 .explore-button {
-    display: inline-block;
-    margin: 40px 0;
-    padding: 15px 35px;
+    display: block;
+    margin: 32px auto;
+    padding: 10px 30px;
     background-color: #EDB534;
     color: #1E1E1E;
-    font-size: 1.1rem;
+    font-size: 20px;
     font-weight: 400;
-    border-radius: 12px;
+    border-radius: 10px;
     text-align: center;
 }
 
 .explore-button:hover {
-    background-color: #5a7320;
+    background-color: #EDB534;
 }
 
 /* PARTNERS SECTION */
 .partners {
     margin-top: 50px;
+    margin-bottom: 32px;
 }
 
 .partners h3 {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 8px;
 }
 
 .partner-logos {
     display: flex;
-    gap: 30px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 .partner-logos img {
-    max-height: 60px;
+    border: #7AD8A4 1px solid;
+    border-radius: 10px;
+    max-height: 90px;
     object-fit: contain;
 }
 
-/* ==============================
-   RESPONSIVE
-============================== */
+/* RESPONSIVE */
 @media (max-width: 768px) {
     .cards {
         gap: 15px;
