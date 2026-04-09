@@ -150,7 +150,7 @@ header p {
 .card {
     display: flex;
     gap: 12px;
-    width: 290px;
+    width: 280px;
     height: 150px;
     background-color: #434343;
     border-radius: 10px;
@@ -490,6 +490,10 @@ header p {
     width: 150px;
     height: 200px;
     box-sizing: border-box;
+}
+
+.collection-card:active {
+    transform: scale(0.95);
 }
 
 .collection .card-inner {
