@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // TAP INTERACTIONS FOR MOBILE
 
 // Buttons + text links (scale down)
-const buttons = document.querySelectorAll('.explore-button, .view-button, .remedy-button');
+const buttons = document.querySelectorAll('.explore-button, .view-button, .remedy-button, .account-icon, .logo');
 
 buttons.forEach(btn => {
     btn.addEventListener('touchstart', () => {
