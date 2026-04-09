@@ -161,7 +161,7 @@ header p {
 .card {
     display: flex;
     gap: 12px;
-    width: 280px;
+    width: 285px;
     height: 150px;
     background-color: #434343;
     border-radius: 10px;
@@ -193,7 +193,7 @@ header p {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 40px;
+    margin-top: 38px;
     padding: 6px 10px;
     background: #6C63FF;
     color: #FDFDFA;
