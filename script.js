@@ -117,3 +117,104 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+// TAP INTERACTIONS FOR MOBILE
+
+// Buttons + text links (scale down)
+const buttons = document.querySelectorAll('.explore-button, .view-button, .remedy-button');
+
+buttons.forEach(btn => {
+    btn.addEventListener('touchstart', () => {
+        btn.classList.add('pressed');
+    });
+
+    btn.addEventListener('touchend', () => {
+        setTimeout(() => {
+            btn.classList.remove('pressed');
+        }, 150);
+    });
+
+    btn.addEventListener('touchcancel', () => {
+        btn.classList.remove('pressed');
+    });
+});
+
+
+// Carousel arrows (scale UP)
+const arrows = document.querySelectorAll('.arrow');
+
+arrows.forEach(arrow => {
+    arrow.addEventListener('touchstart', () => {
+        arrow.classList.add('pressed');
+    });
+
+    arrow.addEventListener('touchend', () => {
+        setTimeout(() => {
+            arrow.classList.remove('pressed');
+        }, 150);
+    });
+
+    arrow.addEventListener('touchcancel', () => {
+        arrow.classList.remove('pressed');
+    });
+});
+
+
+// Account cards (scale down)
+const accountCards = document.querySelectorAll('.account-card');
+
+accountCards.forEach(card => {
+    card.addEventListener('touchstart', () => {
+        card.classList.add('pressed');
+    });
+
+    card.addEventListener('touchend', () => {
+        setTimeout(() => {
+            card.classList.remove('pressed');
+        }, 150);
+    });
+
+    card.addEventListener('touchcancel', () => {
+        card.classList.remove('pressed');
+    });
+});
+
+
+// Collection page cards (scale down)
+const collectionCards = document.querySelectorAll('.collection .card');
+
+collectionCards.forEach(card => {
+    card.addEventListener('touchstart', () => {
+        card.classList.add('pressed');
+    });
+
+    card.addEventListener('touchend', () => {
+        setTimeout(() => {
+            card.classList.remove('pressed');
+        }, 150);
+    });
+
+    card.addEventListener('touchcancel', () => {
+        card.classList.remove('pressed');
+    });
+});
+
+
+// Partner logos (lift + scale)
+const partnerLogos = document.querySelectorAll('.partner-logos a');
+
+partnerLogos.forEach(logo => {
+    logo.addEventListener('touchstart', () => {
+        logo.classList.add('pressed');
+    });
+
+    logo.addEventListener('touchend', () => {
+        setTimeout(() => {
+            logo.classList.remove('pressed');
+        }, 150);
+    });
+
+    logo.addEventListener('touchcancel', () => {
+        logo.classList.remove('pressed');
+    });
+});

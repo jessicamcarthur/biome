@@ -287,8 +287,8 @@ header p {
     transition: transform 0.15s ease, filter 0.15s ease;
 }
 
-.partner-logos a:active {
-    transform: scale(0.95);
+.partner-logos a.pressed {
+    transform: translateY(-3px) scale(1.05);
 }
 
 /* ACCOUNT COLLECTION */
@@ -492,7 +492,7 @@ header p {
     box-sizing: border-box;
 }
 
-.collection-card:active {
+.collection .card.pressed {
     transform: scale(0.95);
 }
 
