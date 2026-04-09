@@ -534,38 +534,46 @@ header p {
 }
 
 /* IDENTIFIED PAGE */
-.main-image {
-    margin-top: 24px;
+.cards-identified {
+    margin-top: 32px;
+    position: relative;
+    display: flex;
+    gap: 20px;
+    overflow: hidden;
+    padding-top: 0px;
+    padding-bottom: 8px;
 }
 
-.main-image img {
-    width: 100%;
-    border-radius: 12px;
+.cards-identified img {
+    width: 285px;
+    border-radius: 10px;
 }
 
 .carousel-controls {
     margin-top: 12px;
 }
 
-.section {
+.info-content {
     margin-top: 32px;
 }
 
-.section h3 {
+.text-block h3 {
     font-size: 20px;
     font-weight: 500;
-    margin-bottom: 4px;
+    margin-bottom: 0px;
 }
 
-.section p {
+.text-block p {
+    margin-bottom: 12px;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.35;
     color: #FDFDFA;
 }
 
 /* RECIPE CARD */
 .recipe-card {
-    margin-top: 32px;
+    margin-top: 60px;
+    margin-bottom: 32px;
     padding: 16px;
     border: 1px solid #7AD8A4;
     border-radius: 10px;
@@ -583,7 +591,7 @@ header p {
 }
 
 .recipe-header h3 {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     margin: 0;
 }
@@ -594,6 +602,12 @@ header p {
     gap: 8px;
 }
 
+.recipe-body h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: -2px;
+}
+
 .recipe-actions img {
     width: 16px;
     padding: 8px;
@@ -601,28 +615,14 @@ header p {
     border-radius: 8px;
 }
 
-.recipe-card p {
+.recipe-card ol, ul {
     font-size: 14px;
     color: #DADADA;
-    line-height: 1.6;
+    line-height: 1.4;
     margin-bottom: 8px;
-}
-
-.recipe-card ul {
-    margin-left: 16px;
-    margin-bottom: 12px;
-}
-
-.recipe-card li {
-    font-size: 14px;
-    margin-bottom: 6px;
-}
-
-.recipe-card ol {
-    margin-left: 16px;
 }
 
 .recipe-card ol li {
     margin-bottom: 10px;
-    line-height: 1.6;
+    line-height: 1.5;
 }
