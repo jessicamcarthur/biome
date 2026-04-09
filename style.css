@@ -12,6 +12,7 @@ body {
 a {
     text-decoration: none;
     color: inherit;
+    transition: all 0.2s ease;
 }
 
 img {
@@ -131,6 +132,12 @@ header p {
     cursor: pointer;
 }
 
+.view-button:active,
+.view-button.pressed {
+    text-decoration: underline;
+    transform: scale(0.97);
+}
+
 .cards {
     position: relative;
     display: flex;
@@ -143,7 +150,7 @@ header p {
 .card {
     display: flex;
     gap: 12px;
-    width: 270px;
+    width: 290px;
     height: 150px;
     background-color: #434343;
     border-radius: 10px;
@@ -191,6 +198,16 @@ header p {
     opacity: 1;
 }
 
+.explore-button,
+.remedy-button {
+    transition: transform 0.1s ease;
+}
+
+.explore-button:active,
+.remedy-button:active {
+    transform: scale(0.97);
+}
+
 /* CAROUSEL ARROWS & PROGRESS */
 .carousel-controls {
     display: flex;
@@ -201,9 +218,15 @@ header p {
 }
 
 .arrow {
+    transition: transform 0.15s ease;
     width: 22px;
     height: 22px;
     cursor: pointer;
+}
+
+.arrow:active,
+.arrow.pressed {
+    transform: scale(1.3);
 }
 
 .circle.progress {
@@ -234,10 +257,6 @@ header p {
     text-align: center;
 }
 
-.explore-button:hover {
-    background-color: #EDB534;
-}
-
 /* PARTNERS SECTION */
 .partners {
     margin-top: 50px;
@@ -261,6 +280,15 @@ header p {
     border-radius: 10px;
     max-height: 90px;
     object-fit: contain;
+}
+
+.partner-logos a {
+    display: inline-block;
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.partner-logos a:active {
+    transform: scale(0.95);
 }
 
 /* ACCOUNT COLLECTION */
@@ -296,6 +324,12 @@ header p {
     text-decoration: none;
 }
 
+.account-collection .view-button:active,
+.account-collection .view-button.pressed {
+    text-decoration: underline;
+    transform: scale(0.97);
+}
+
 .account-cards {
     display: flex;
     gap: 16px;
@@ -306,6 +340,10 @@ header p {
     background: #434343;
     border-radius: 10px;
     padding: 12px;
+}
+
+.account-card:active {
+    transform: scale(0.95);
 }
 
 .account-card img {
