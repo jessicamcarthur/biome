@@ -5,62 +5,61 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1️⃣ CAROUSEL
     // =========================
     const cardsContainer = document.getElementById("cards");
-if (cardsContainer) {
-    const leftArrow = document.getElementById("arrow-left");
-    const rightArrow = document.getElementById("arrow-right");
-    const dots = document.querySelectorAll("#progress-dots img");
+    if (cardsContainer) {
+        const leftArrow = document.getElementById("arrow-left");
+        const rightArrow = document.getElementById("arrow-right");
+        const dots = document.querySelectorAll("#progress-dots img");
 
-    const cards = cardsContainer.querySelectorAll(".card");
-    let currentIndex = 0;
-    const totalCards = cards.length;
+        const cards = cardsContainer.querySelectorAll(".card");
+        let currentIndex = 0;
+        const totalCards = cards.length;
 
-    function getCardWidth() {
-        return cards[0].offsetWidth + 20; // includes your gap
-    }
+        function getCardWidth() {
+            return cards[0].offsetWidth + 20;
+        }
 
-    function updateCarousel() {
-        const cardWidth = getCardWidth();
+        function updateCarousel() {
+            const cardWidth = getCardWidth();
 
-        cardsContainer.scrollTo({
-            left: currentIndex * cardWidth,
-            behavior: "smooth",
-        });
+            cardsContainer.scrollTo({
+                left: currentIndex * cardWidth,
+                behavior: "smooth",
+            });
 
-        dots.forEach((dot, index) => {
-            if (index === currentIndex) {
-                dot.src = "images/circle.svg";
-                dot.classList.add("active");
-            } else {
-                dot.src = "images/circle-outline.svg";
-                dot.classList.remove("active");
+            dots.forEach((dot, index) => {
+                if (index === currentIndex) {
+                    dot.src = "images/circle.svg";
+                    dot.classList.add("active");
+                } else {
+                    dot.src = "images/circle-outline.svg";
+                    dot.classList.remove("active");
+                }
+            });
+        }
+
+        rightArrow?.addEventListener("click", () => {
+            if (currentIndex < totalCards - 1) {
+                currentIndex++;
+                updateCarousel();
             }
         });
+
+        leftArrow?.addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarousel();
+            }
+        });
+
+        updateCarousel();
     }
 
-    rightArrow?.addEventListener("click", () => {
-        if (currentIndex < totalCards - 1) {
-            currentIndex++;
-            updateCarousel();
-        }
-    });
-
-    leftArrow?.addEventListener("click", () => {
-        if (currentIndex > 0) {
-            currentIndex--;
-            updateCarousel();
-        }
-    });
-
-    updateCarousel();
-}
-
     // =========================
-// CAMERA PAGE (scan.html)
-// =========================
-document.addEventListener("DOMContentLoaded", () => {
+    // 2️⃣ CAMERA PAGE (scan.html)
+    // =========================
     const video = document.getElementById('camera');
     const captureBtn = document.getElementById('capture-btn');
- 
+
     if (video && captureBtn) {
         async function startCamera() {
             try {
@@ -68,178 +67,152 @@ document.addEventListener("DOMContentLoaded", () => {
                     video: { facingMode: { ideal: 'environment' } }
                 });
                 video.srcObject = stream;
-                await video.play();
             } catch (err) {
-                console.error("Camera error:", err);
-                alert("Unable to access camera. Please allow camera access in your browser settings.");
+                console.warn("Back camera failed, trying any camera:", err);
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                    video.srcObject = stream;
+                } catch (fallbackErr) {
+                    console.error("Camera error:", fallbackErr);
+                    alert("Unable to access camera. Please allow camera access in your browser settings.");
+                }
             }
         }
- 
+
         startCamera();
- 
+
         captureBtn.addEventListener('click', async (e) => {
             e.preventDefault();
- 
+
             if (!video.videoWidth || !video.videoHeight) {
                 alert("Camera is not ready yet. Please wait a moment and try again.");
                 return;
             }
- 
+
+            // Capture frame from video
             const canvas = document.createElement('canvas');
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             const ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
- 
-            const imageBase64 = canvas.toDataURL('image/jpeg');
-            localStorage.setItem('capturedPlant', imageBase64);
- 
-            window.location.href = 'identified.html';
+
+            // Convert canvas to a Blob (image file)
+            canvas.toBlob(async (blob) => {
+                const formData = new FormData();
+                formData.append('images', blob, 'plant.jpg');
+                formData.append('organs', 'auto');
+
+                const PLANTNET_API_KEY = '2b10rCKYqFIILPte2UZFPCDlXu';
+                const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${PLANTNET_API_KEY}&lang=en&include-related-images=false`;
+
+                // Show loading state
+                captureBtn.style.opacity = '0.5';
+                captureBtn.style.pointerEvents = 'none';
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        console.error('PlantNet error:', errorData);
+                        alert('Could not identify plant. Please try again with a clearer photo.');
+                        captureBtn.style.opacity = '1';
+                        captureBtn.style.pointerEvents = 'auto';
+                        return;
+                    }
+
+                    const data = await response.json();
+
+                    // Store result and captured image for identified.html
+                    localStorage.setItem('plantResult', JSON.stringify(data));
+                    localStorage.setItem('capturedPlant', canvas.toDataURL('image/jpeg'));
+
+                    window.location.href = 'identified.html';
+
+                } catch (err) {
+                    console.error('Network error:', err);
+                    alert('Network error. Please check your connection and try again.');
+                    captureBtn.style.opacity = '1';
+                    captureBtn.style.pointerEvents = 'auto';
+                }
+            }, 'image/jpeg', 0.9);
         });
     }
- 
+
     // =========================
-    // IDENTIFIED PAGE (identified.html)
+    // 3️⃣ IDENTIFIED PAGE (identified.html)
     // =========================
-    const plantData = JSON.parse(localStorage.getItem('identifiedPlant') || "null");
     const container = document.getElementById('plant-result');
- 
+
     if (container) {
-        if (!plantData || !plantData.suggestions || plantData.suggestions.length === 0) {
+        const data = JSON.parse(localStorage.getItem('plantResult') || 'null');
+        const capturedImage = localStorage.getItem('capturedPlant');
+
+        if (!data || !data.results || data.results.length === 0) {
             container.innerHTML = "<p>No plant data found. Try scanning again!</p>";
         } else {
-            const topResult = plantData.suggestions[0];
+            const top = data.results[0];
+            const commonNames = top.species?.commonNames?.join(', ') || 'No common name found';
+            const scientificName = top.species?.scientificNameWithoutAuthor || '';
+            const family = top.species?.family?.scientificNameWithoutAuthor || '';
+            const confidence = Math.round(top.score * 100);
+            const wikiUrl = top.species?.gbif?.id
+                ? `https://www.gbif.org/species/${top.species.gbif.id}`
+                : null;
+
             container.innerHTML = `
-                <div style="padding:20px; text-align:center;">
-                    <h2>${topResult.plant_name}</h2>
-                    <p>Confidence: ${Math.round(topResult.probability * 100)}%</p>
-                    <p>${topResult.plant_details?.wiki_description?.value || ''}</p>
-                    <a href="${topResult.plant_details?.url}" target="_blank">Learn more</a>
-                </div>
-            `;
-        }
-    }
-});
-
-    // =========================
-    // 3️⃣ IDENTIFIED PAGE
-    // =========================
-    const plantData = JSON.parse(localStorage.getItem('identifiedPlant') || "null");
-    if (plantData) {
-        if (!plantData.suggestions || plantData.suggestions.length === 0) {
-            document.body.innerHTML = "<p>No plant data found. Try scanning again!</p>";
-        } else {
-            const topResult = plantData.suggestions[0];
-            document.body.innerHTML = `
-                <div style="padding:20px; text-align:center;">
-                    <h2>${topResult.plant_name}</h2>
-                    <p>Confidence: ${Math.round(topResult.probability * 100)}%</p>
-                    <p>${topResult.plant_details?.wiki_description?.value || ''}</p>
-                    <a href="${topResult.plant_details?.url}" target="_blank">Learn more</a>
-                </div>
+                ${capturedImage ? `<img src="${capturedImage}" alt="Captured plant" style="width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:16px;">` : ''}
+                <h2>${commonNames}</h2>
+                <p><em>${scientificName}</em></p>
+                ${family ? `<p>Family: ${family}</p>` : ''}
+                <p>Match confidence: ${confidence}%</p>
+                ${wikiUrl ? `<a href="${wikiUrl}" target="_blank">Learn more</a>` : ''}
+                <br><br>
+                <a href="scan.html">Scan another plant</a>
             `;
         }
     }
 
-});
+    // =========================
+    // 4️⃣ TAP INTERACTIONS FOR MOBILE
+    // =========================
 
-// TAP INTERACTIONS FOR MOBILE
-
-// Buttons + text links (scale down)
-const buttons = document.querySelectorAll('.explore-button, .view-button, .remedy-button, .account-icon, .logo');
-
-buttons.forEach(btn => {
-    btn.addEventListener('touchstart', () => {
-        btn.classList.add('pressed');
+    const buttons = document.querySelectorAll('.explore-button, .view-button, .remedy-button, .account-icon, .logo');
+    buttons.forEach(btn => {
+        btn.addEventListener('touchstart', () => btn.classList.add('pressed'));
+        btn.addEventListener('touchend', () => setTimeout(() => btn.classList.remove('pressed'), 150));
+        btn.addEventListener('touchcancel', () => btn.classList.remove('pressed'));
     });
 
-    btn.addEventListener('touchend', () => {
-        setTimeout(() => {
-            btn.classList.remove('pressed');
-        }, 150);
+    const arrows = document.querySelectorAll('.arrow');
+    arrows.forEach(arrow => {
+        arrow.addEventListener('touchstart', () => arrow.classList.add('pressed'));
+        arrow.addEventListener('touchend', () => setTimeout(() => arrow.classList.remove('pressed'), 150));
+        arrow.addEventListener('touchcancel', () => arrow.classList.remove('pressed'));
     });
 
-    btn.addEventListener('touchcancel', () => {
-        btn.classList.remove('pressed');
-    });
-});
-
-
-// Carousel arrows (scale UP)
-const arrows = document.querySelectorAll('.arrow');
-
-arrows.forEach(arrow => {
-    arrow.addEventListener('touchstart', () => {
-        arrow.classList.add('pressed');
+    const accountCards = document.querySelectorAll('.account-card');
+    accountCards.forEach(card => {
+        card.addEventListener('touchstart', () => card.classList.add('pressed'));
+        card.addEventListener('touchend', () => setTimeout(() => card.classList.remove('pressed'), 150));
+        card.addEventListener('touchcancel', () => card.classList.remove('pressed'));
     });
 
-    arrow.addEventListener('touchend', () => {
-        setTimeout(() => {
-            arrow.classList.remove('pressed');
-        }, 150);
+    const collectionCards = document.querySelectorAll('.collection .card');
+    collectionCards.forEach(card => {
+        card.addEventListener('touchstart', () => card.classList.add('pressed'));
+        card.addEventListener('touchend', () => setTimeout(() => card.classList.remove('pressed'), 150));
+        card.addEventListener('touchcancel', () => card.classList.remove('pressed'));
     });
 
-    arrow.addEventListener('touchcancel', () => {
-        arrow.classList.remove('pressed');
-    });
-});
-
-
-// Account cards (scale down)
-const accountCards = document.querySelectorAll('.account-card');
-
-accountCards.forEach(card => {
-    card.addEventListener('touchstart', () => {
-        card.classList.add('pressed');
+    const partnerLogos = document.querySelectorAll('.partner-logos a');
+    partnerLogos.forEach(logo => {
+        logo.addEventListener('touchstart', () => logo.classList.add('pressed'));
+        logo.addEventListener('touchend', () => setTimeout(() => logo.classList.remove('pressed'), 150));
+        logo.addEventListener('touchcancel', () => logo.classList.remove('pressed'));
     });
 
-    card.addEventListener('touchend', () => {
-        setTimeout(() => {
-            card.classList.remove('pressed');
-        }, 150);
-    });
-
-    card.addEventListener('touchcancel', () => {
-        card.classList.remove('pressed');
-    });
-});
-
-
-// Collection page cards (scale down)
-const collectionCards = document.querySelectorAll('.collection .card');
-
-collectionCards.forEach(card => {
-    card.addEventListener('touchstart', () => {
-        card.classList.add('pressed');
-    });
-
-    card.addEventListener('touchend', () => {
-        setTimeout(() => {
-            card.classList.remove('pressed');
-        }, 150);
-    });
-
-    card.addEventListener('touchcancel', () => {
-        card.classList.remove('pressed');
-    });
-});
-
-
-// Partner logos (lift + scale)
-const partnerLogos = document.querySelectorAll('.partner-logos a');
-
-partnerLogos.forEach(logo => {
-    logo.addEventListener('touchstart', () => {
-        logo.classList.add('pressed');
-    });
-
-    logo.addEventListener('touchend', () => {
-        setTimeout(() => {
-            logo.classList.remove('pressed');
-        }, 150);
-    });
-
-    logo.addEventListener('touchcancel', () => {
-        logo.classList.remove('pressed');
-    });
 });

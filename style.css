@@ -161,7 +161,6 @@ header p {
 .card {
     display: flex;
     gap: 12px;
-    min-width: 100%;
     width: 285px;
     height: 150px;
     background-color: #434343;
