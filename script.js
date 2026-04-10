@@ -96,49 +96,49 @@ document.addEventListener("DOMContentLoaded", () => {
             const ctx = canvas.getContext('2d');
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-            // Convert canvas to a Blob (image file)
-            canvas.toBlob(async (blob) => {
-                const formData = new FormData();
-                formData.append('images', blob, 'plant.jpg');
-                formData.append('organs', 'auto');
+            const imageBase64 = canvas.toDataURL('image/jpeg');
 
-                const PLANTNET_API_KEY = '2b10rCKYqFIILPte2UZFPCDlXu';
-                const url = `https://my-api.plantnet.org/v2/identify/all?api-key=${PLANTNET_API_KEY}&lang=en&include-related-images=false`;
+            // Dim button to show loading
+            captureBtn.style.opacity = '0.5';
+            captureBtn.style.pointerEvents = 'none';
 
-                // Show loading state
-                captureBtn.style.opacity = '0.5';
-                captureBtn.style.pointerEvents = 'none';
+            try {
+                const response = await fetch('https://plant.id/api/v3/identification?classification_level=all&similar_images=true', {
+                    method: 'POST',
+                    headers: {
+                        'Api-Key': 'izrAk3IBw4UBz0rpa6EgAFfkA9GKomql35jZ2TZNizsUf6NhKs',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        images: [imageBase64.split(",")[1]]
+                    })
+                });
 
-                try {
-                    const response = await fetch(url, {
-                        method: 'POST',
-                        body: formData
-                    });
+                const rawText = await response.text();
+                console.log('Plant.id raw response:', rawText);
 
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        console.error('PlantNet error:', errorData);
-                        alert('Could not identify plant. Please try again with a clearer photo.');
-                        captureBtn.style.opacity = '1';
-                        captureBtn.style.pointerEvents = 'auto';
-                        return;
-                    }
+                const data = JSON.parse(rawText);
+                console.log('Plant.id response:', data);
 
-                    const data = await response.json();
-
-                    // Store result and captured image for identified.html
-                    localStorage.setItem('plantResult', JSON.stringify(data));
-                    localStorage.setItem('capturedPlant', canvas.toDataURL('image/jpeg'));
-
-                    window.location.href = 'identified.html';
-
-                } catch (err) {
-                    console.error('Network error:', err);
-                    alert('Network error. Please check your connection and try again.');
+                if (!response.ok) {
+                    console.error('Plant.id error:', data);
+                    alert('Could not identify plant. Please try again with a clearer photo.');
                     captureBtn.style.opacity = '1';
                     captureBtn.style.pointerEvents = 'auto';
+                    return;
                 }
-            }, 'image/jpeg', 0.9);
+
+                localStorage.setItem('plantResult', JSON.stringify(data));
+                localStorage.setItem('capturedPlant', imageBase64);
+
+                window.location.href = 'identified.html';
+
+            } catch (err) {
+                console.error('Network error:', err);
+                alert('Network error. Please check your connection and try again.');
+                captureBtn.style.opacity = '1';
+                captureBtn.style.pointerEvents = 'auto';
+            }
         });
     }
 
@@ -151,28 +151,32 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = JSON.parse(localStorage.getItem('plantResult') || 'null');
         const capturedImage = localStorage.getItem('capturedPlant');
 
-        if (!data || !data.results || data.results.length === 0) {
+        if (!data || !data.result || !data.result.classification) {
             container.innerHTML = "<p>No plant data found. Try scanning again!</p>";
         } else {
-            const top = data.results[0];
-            const commonNames = top.species?.commonNames?.join(', ') || 'No common name found';
-            const scientificName = top.species?.scientificNameWithoutAuthor || '';
-            const family = top.species?.family?.scientificNameWithoutAuthor || '';
-            const confidence = Math.round(top.score * 100);
-            const wikiUrl = top.species?.gbif?.id
-                ? `https://www.gbif.org/species/${top.species.gbif.id}`
-                : null;
+            const suggestions = data.result.classification.suggestions;
 
-            container.innerHTML = `
-                ${capturedImage ? `<img src="${capturedImage}" alt="Captured plant" style="width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:16px;">` : ''}
-                <h2>${commonNames}</h2>
-                <p><em>${scientificName}</em></p>
-                ${family ? `<p>Family: ${family}</p>` : ''}
-                <p>Match confidence: ${confidence}%</p>
-                ${wikiUrl ? `<a href="${wikiUrl}" target="_blank">Learn more</a>` : ''}
-                <br><br>
-                <a href="scan.html">Scan another plant</a>
-            `;
+            if (!suggestions || suggestions.length === 0) {
+                container.innerHTML = "<p>Could not identify this plant. Try scanning again with a clearer photo.</p>";
+            } else {
+                const top = suggestions[0];
+                const commonNames = top.details?.common_names?.join(', ') || 'No common name found';
+                const scientificName = top.name || '';
+                const confidence = Math.round(top.probability * 100);
+                const description = top.details?.description?.value || '';
+                const wikiUrl = top.details?.url || null;
+
+                container.innerHTML = `
+                    ${capturedImage ? `<img src="${capturedImage}" alt="Captured plant" style="width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:16px;">` : ''}
+                    <h2>${commonNames}</h2>
+                    <p><em>${scientificName}</em></p>
+                    <p>Match confidence: ${confidence}%</p>
+                    ${description ? `<p>${description}</p>` : ''}
+                    ${wikiUrl ? `<a href="${wikiUrl}" target="_blank">Learn more</a>` : ''}
+                    <br><br>
+                    <a href="scan.html">Scan another plant</a>
+                `;
+            }
         }
     }
 
