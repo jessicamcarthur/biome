@@ -5,46 +5,54 @@ document.addEventListener("DOMContentLoaded", () => {
     // 1️⃣ CAROUSEL
     // =========================
     const cardsContainer = document.getElementById("cards");
-    if (cardsContainer) {
-        const leftArrow = document.getElementById("arrow-left");
-        const rightArrow = document.getElementById("arrow-right");
-        const dots = document.querySelectorAll("#progress-dots img");
+if (cardsContainer) {
+    const leftArrow = document.getElementById("arrow-left");
+    const rightArrow = document.getElementById("arrow-right");
+    const dots = document.querySelectorAll("#progress-dots img");
 
-        const cardWidth = 310; // card width + gap
-        let currentIndex = 0;
-        const totalCards = cardsContainer.children.length;
+    const cards = cardsContainer.querySelectorAll(".card");
+    let currentIndex = 0;
+    const totalCards = cards.length;
 
-        function updateCarousel() {
-            cardsContainer.scrollTo({
-                left: currentIndex * cardWidth,
-                behavior: "smooth",
-            });
+    function getCardWidth() {
+        return cards[0].offsetWidth + 20; // includes your gap
+    }
 
-            dots.forEach((dot, index) => {
-                if (index === currentIndex) {
-                    dot.src = "images/circle.svg";
-                    dot.classList.add("active");
-                } else {
-                    dot.src = "images/circle-outline.svg";
-                    dot.classList.remove("active");
-                }
-            });
-        }
+    function updateCarousel() {
+        const cardWidth = getCardWidth();
 
-        rightArrow?.addEventListener("click", () => {
-            if (currentIndex < totalCards - 1) {
-                currentIndex++;
-                updateCarousel();
-            }
+        cardsContainer.scrollTo({
+            left: currentIndex * cardWidth,
+            behavior: "smooth",
         });
 
-        leftArrow?.addEventListener("click", () => {
-            if (currentIndex > 0) {
-                currentIndex--;
-                updateCarousel();
+        dots.forEach((dot, index) => {
+            if (index === currentIndex) {
+                dot.src = "images/circle.svg";
+                dot.classList.add("active");
+            } else {
+                dot.src = "images/circle-outline.svg";
+                dot.classList.remove("active");
             }
         });
     }
+
+    rightArrow?.addEventListener("click", () => {
+        if (currentIndex < totalCards - 1) {
+            currentIndex++;
+            updateCarousel();
+        }
+    });
+
+    leftArrow?.addEventListener("click", () => {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateCarousel();
+        }
+    });
+
+    updateCarousel();
+}
 
     // =========================
     // 2️⃣ CAMERA PAGE

@@ -161,6 +161,7 @@ header p {
 .card {
     display: flex;
     gap: 12px;
+    min-width: 100%;
     width: 285px;
     height: 150px;
     background-color: #434343;
@@ -538,8 +539,10 @@ header p {
     margin-top: 32px;
     position: relative;
     display: flex;
+    transition: transform 0.4s ease;
+    width: 100%;
     gap: 20px;
-    overflow: hidden;
+    overflow-x: hidden;
     padding-top: 0px;
     padding-bottom: 8px;
 }
@@ -585,9 +588,10 @@ header p {
     margin-bottom: 12px;
 }
 
-.recipe-header img:first-child {
-    width: 20px;
-    margin-right: 8px;
+.title-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .recipe-header h3 {
@@ -596,28 +600,31 @@ header p {
     margin: 0;
 }
 
-.recipe-actions {
-    margin-left: auto;
-    display: flex;
-    gap: 8px;
-}
-
 .recipe-body h4 {
     font-size: 16px;
     font-weight: 500;
     margin-bottom: -2px;
 }
 
-.recipe-actions img {
-    width: 16px;
-    padding: 8px;
-    background: #6C63FF;
-    border-radius: 8px;
+.action-buttons {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+}
+.action-buttons img {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.action-buttons img:last-child {
+    transform: scale(1.1);
 }
 
 .recipe-card ol, ul {
     font-size: 14px;
-    color: #DADADA;
+    color: #FDFDFA;
     line-height: 1.4;
     margin-bottom: 8px;
 }
