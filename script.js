@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
             captureBtn.style.pointerEvents = 'none';
 
             try {
-                const response = await fetch('https://plant.id/api/v3/identification?classification_level=all&similar_images=true', {
+                const response = await fetch('https://plant.id/api/v3/identification?classification_level=all&similar_images=true&details=common_names,description,url', {
                     method: 'POST',
                     headers: {
                         'Api-Key': 'izrAk3IBw4UBz0rpa6EgAFfkA9GKomql35jZ2TZNizsUf6NhKs',
@@ -148,36 +148,99 @@ document.addEventListener("DOMContentLoaded", () => {
     const container = document.getElementById('plant-result');
 
     if (container) {
-        const data = JSON.parse(localStorage.getItem('plantResult') || 'null');
-        const capturedImage = localStorage.getItem('capturedPlant');
+        (async () => {
+            const data = JSON.parse(localStorage.getItem('plantResult') || 'null');
+            const capturedImage = localStorage.getItem('capturedPlant');
 
-        if (!data || !data.result || !data.result.classification) {
-            container.innerHTML = "<p>No plant data found. Try scanning again!</p>";
-        } else {
-            const suggestions = data.result.classification.suggestions;
-
-            if (!suggestions || suggestions.length === 0) {
-                container.innerHTML = "<p>Could not identify this plant. Try scanning again with a clearer photo.</p>";
+            if (!data || !data.result || !data.result.classification) {
+                container.innerHTML = "<p>No plant data found. Try scanning again!</p>";
             } else {
-                const top = suggestions[0];
-                const commonNames = top.details?.common_names?.join(', ') || 'No common name found';
-                const scientificName = top.name || '';
-                const confidence = Math.round(top.probability * 100);
-                const description = top.details?.description?.value || '';
-                const wikiUrl = top.details?.url || null;
+                const suggestions = data.result.classification.suggestions;
 
-                container.innerHTML = `
-                    ${capturedImage ? `<img src="${capturedImage}" alt="Captured plant" style="width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:16px;">` : ''}
-                    <h2>${commonNames}</h2>
-                    <p><em>${scientificName}</em></p>
-                    <p>Match confidence: ${confidence}%</p>
-                    ${description ? `<p>${description}</p>` : ''}
-                    ${wikiUrl ? `<a href="${wikiUrl}" target="_blank">Learn more</a>` : ''}
-                    <br><br>
-                    <a href="scan.html">Scan another plant</a>
-                `;
+                if (!suggestions || suggestions.length === 0) {
+                    container.innerHTML = "<p>Could not identify this plant. Try scanning again with a clearer photo.</p>";
+                } else {
+                    const top = suggestions[0];
+                    const commonNames = top.details?.common_names?.[0] || top.name || "Unknown Plant";
+                    const scientificName = top.name || '';
+                    const confidence = Math.round(top.probability * 100);
+                    const rawDescription = top.details?.description?.value || '';
+                    const wikiUrl = top.details?.url || null;
+
+                    // Update the existing h2 in the header
+                    const h2 = document.querySelector('.hero-text h2');
+                    if (h2) h2.textContent = scientificName;
+
+                    // Show initial UI with loading states for Gemini content
+                    container.innerHTML = `
+                        ${capturedImage ? `<img src="${capturedImage}" alt="Captured plant" style="width:100%; max-height:300px; object-fit:cover; border-radius:12px; margin-bottom:16px;">` : ''}
+                        
+                        <span id="native-badge" class="confidence-badge">Checking origin...</span>
+                        <h3>Meet ${scientificName}</h3>
+                        <p id="plant-description">${rawDescription || 'No description available.'}</p>
+                        <div id="plant-remedy" class="remedy-section">
+                            <h4>Remedy</h4>
+                            <p>Loading remedy...</p>
+                        </div>
+                    `;
+
+                    // Call Gemini for native status + remedy
+                    const GEMINI_API_KEY = 'AIzaSyB8DkWAXLJ4a0yKILglTcrzNCkpabwOwMk';
+                    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`;
+
+                    try {
+                        const geminiResponse = await fetch(geminiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{
+                                    parts: [{
+                                        text: `You are a writer for Biome, a New Zealand nature app. Given the plant "${commonNames}" (${scientificName}), respond ONLY with a valid JSON object in this exact format:
+{
+  "isNative": true or false,
+  "remedy": "A 2-3 sentence herbal remedy or traditional use for this plant, written in a warm, conversational Aotearoa New Zealand tone. Weave in Māori cultural context where relevant. If no remedy exists, say something poetic about the plant's role in nature."
+}
+Do not include any text outside the JSON.`
+                                    }]
+                                }]
+                            })
+                        });
+
+                        const geminiData = await geminiResponse.json();
+                        const rawText = geminiData.candidates?.[0]?.content?.parts?.[0]?.text || '{}';
+                        console.log('Gemini raw text:', rawText);
+                        const cleaned = rawText.replace(/```json|```/g, '').trim();
+                        let parsed = {};
+                        try {
+                            parsed = JSON.parse(cleaned);
+                        } catch (parseErr) {
+                            console.error('JSON parse error:', parseErr, 'cleaned text:', cleaned);
+                        }
+                        console.log('Gemini parsed:', parsed);
+
+                        // Update native badge
+                        const nativeBadge = document.getElementById('native-badge');
+                        if (nativeBadge) {
+                            nativeBadge.textContent = parsed.isNative ? 'Native to Aotearoa' : 'Introduced Species';
+                            nativeBadge.className = parsed.isNative ? 'confidence-badge native' : 'confidence-badge introduced';
+                        }
+
+                        // Update remedy
+                        const remedyEl = document.getElementById('plant-remedy');
+                        if (remedyEl) {
+                            remedyEl.innerHTML = `<h4>Remedy</h4><p>${parsed.remedy || 'No remedy information available.'}</p>`;
+                        }
+
+                    } catch (err) {
+                        console.error('Gemini error:', err);
+                        const nativeBadge = document.getElementById('native-badge');
+                        if (nativeBadge) nativeBadge.textContent = 'Origin unknown';
+                        const remedyEl = document.getElementById('plant-remedy');
+                        if (remedyEl) remedyEl.innerHTML = '<h4>Remedy</h4><p>No remedy information available.</p>';
+                    }
+                }
             }
-        }
+        })();
     }
 
     // =========================

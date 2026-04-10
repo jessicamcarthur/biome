@@ -482,6 +482,58 @@ header p {
     width: 30px;
 }
 
+.plant-result {
+    margin-top: 32px;
+}
+
+#plant-result img {
+    width: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 16px;
+}
+
+#native-badge {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 12px;
+    background-color: #6C63FF;
+    color: #FDFDFA;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#plant-result p {
+    font-size: 14px;
+}
+
+#plant-result h3 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 50px;
+    margin-bottom: 8px;
+}
+
+#plant-result h4 {
+    font-size: 20px;
+    font-weight: 400;
+    margin-top: 0px;
+    margin-bottom: 8px;
+}
+
+#plant-description {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 32px;
+}
+
+#plant-result .remedy-section {
+    margin-bottom: 50px;
+    padding: 16px;
+    border: #7AD8A4 1px solid;
+    border-radius: 10px;
+}
+
 /* COLLECTION PAGE */
 .collection {
     margin-top: 50px;
@@ -610,6 +662,7 @@ header p {
     display: flex;
     gap: 8px;
 }
+
 .action-buttons img {
     width: 32px;
     height: 32px;
@@ -621,7 +674,8 @@ header p {
     transform: scale(1.1);
 }
 
-.recipe-card ol, ul {
+.recipe-card ol,
+ul {
     font-size: 14px;
     color: #FDFDFA;
     line-height: 1.4;
