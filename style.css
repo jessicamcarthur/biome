@@ -24,6 +24,7 @@ img {
 .account-icon,
 .logo {
     transition: transform 0.1s ease;
+    z-index: 1;
 }
 
 .account-icon:active,
@@ -36,9 +37,21 @@ img {
 header {
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: hidden;
     padding-left: 24px;
     padding-right: 24px;
     padding-top: 32px;
+}
+
+.header-bg {
+    position: absolute;
+    top: -200px;
+    right: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
 }
 
 .header-top {
@@ -68,6 +81,7 @@ header .account-icon img {
 header .hero-text {
     margin-top: 32px;
     text-align: left;
+    z-index: 1;
 }
 
 header .hero-text h1 {
@@ -95,6 +109,7 @@ header p {
     font-style: normal;
     font-size: 14px;
     margin-top: 16px;
+    z-index: 1;
 }
 
 .container {
@@ -258,9 +273,10 @@ header p {
 /* EXPLORE BUTTON */
 .explore-button {
     display: block;
+    align-items: center;
     margin: 32px auto;
     padding: 10px 30px;
-    background-color: #EDB534;
+    background-color: #EDB634;
     color: #1E1E1E;
     font-size: 20px;
     font-weight: 400;
@@ -444,6 +460,7 @@ header p {
     margin-top: 16px;
     margin-bottom: 50px;
     font-size: 14px;
+    z-index: 1;
 }
 
 .camera-container {
@@ -589,22 +606,13 @@ header p {
 .cards-identified {
     margin-top: 32px;
     position: relative;
-    display: flex;
-    transition: transform 0.4s ease;
     width: 100%;
-    gap: 20px;
-    overflow-x: hidden;
     padding-top: 0px;
-    padding-bottom: 8px;
 }
 
 .cards-identified img {
-    width: 285px;
+    width: 100%;
     border-radius: 10px;
-}
-
-.carousel-controls {
-    margin-top: 12px;
 }
 
 .info-content {
@@ -643,6 +651,12 @@ header p {
     display: flex;
     align-items: center;
     gap: 8px;
+}
+
+.title-group img {
+    margin-top: 5px;
+    width: 24px;
+    height: 24px;
 }
 
 .recipe-header h3 {
