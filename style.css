@@ -5,7 +5,7 @@ body {
     font-style: normal;
     margin: 0;
     padding: 0;
-    background-color: black;
+    background-color: #191919;
     color: #FDFDFA;
 }
 
@@ -61,7 +61,11 @@ header {
 }
 
 header .logo img {
-    height: 20px;
+    height: 24px;
+}
+
+header .logo img[src="images/arrow-left.svg"] {
+    height: 30px;
 }
 
 header .account-icon {
@@ -549,6 +553,39 @@ header p {
     padding: 16px;
     border: #7AD8A4 1px solid;
     border-radius: 10px;
+}
+
+#plant-remedy {
+    margin-top: 60px;
+    margin-bottom: 32px;
+    padding: 16px;
+    border: 1px solid #7AD8A4;
+    border-radius: 10px;
+}
+
+#plant-remedy h4 {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+#plant-remedy h5 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: -2px;
+}
+
+#plant-remedy ul,
+#plant-remedy ol {
+    font-size: 14px;
+    color: #FDFDFA;
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+#plant-remedy ol li {
+    margin-bottom: 10px;
+    line-height: 1.5;
 }
 
 /* COLLECTION PAGE */
