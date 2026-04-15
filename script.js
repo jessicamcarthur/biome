@@ -180,7 +180,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
 
                     // Call Groq for native status + remedy
-                    const GROQ_API_KEY = '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';
+                    const GROQ_API_KEY = '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';
                     const groqUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
                     try {
